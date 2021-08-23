@@ -138,6 +138,14 @@ void btCollisionDispatcherMt::dispatchAllCollisionPairs(btOverlappingPairCache* 
 	updater.mInfo = &info;
 
 	m_batchUpdating = true;
+
+	// FLOYD UPDATE: manuallu clear "m_manifoldsPtr" because the author of bullet forgot to
+	for (int i = m_manifoldsPtr.size()-1; i >= 0; --i)
+	{
+		m_manifoldsPtr[i]->clearManifold();
+		m_manifoldsPtr.pop_back();
+	}
+
 	btParallelFor(0, pairCount, m_grainSize, updater);
 	m_batchUpdating = false;
 
